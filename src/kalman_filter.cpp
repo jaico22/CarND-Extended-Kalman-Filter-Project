@@ -47,14 +47,12 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd h_x(3);
   float px_2 = pow(x_(0),2);
   float py_2 = pow(x_(1),2);
-  float sqrtPx2Py2 = sqrt(px_2 + py_2);
-  h_x(0) = sqrtPx2Py2;
+  h_x(0) = sqrt(px_2 + py_2);
   h_x(1) = atan2(x_(1),x_(0));
   if (fabs(h_x(0)) < 0.0001){
-    h_x(2) = 0.0;
-  } else {
-    h_x(2) = (x_(0)*x_(2) + x_(1)*x_(3))/sqrtPx2Py2;
+    h_x(0) = 0.0001;
   }
+  h_x(2) = (x_(0)*x_(2) + x_(1)*x_(3))/h_x(0);
   // Complete as per usual
   VectorXd y = z - h_x;
   // Adjust y such that phi is between -pi and pi
